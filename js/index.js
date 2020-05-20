@@ -13,17 +13,24 @@ back.addEventListener("click", goBack)
 form.addEventListener("submit", createNewMonster);
 }
 
+// this handles when the forward button is clicked
 function goFoward(){
+  // update the master page number setting and fetch the next page of data
   page += 1
   getMonsters()
 }
 
+// this handles when the back button is clicked
 function goBack(){
+  // update the master page number setting and fetch the previous page of data
+  // master page number is not updated when at page 1
   if (page > 1){
     page -= 1
     getMonsters()
   } 
 }
+
+// get data based on page number
 function getMonsters(){     
   fetch(`http://localhost:3000/monsters/?_limit=50&_page=${page}`)
   .then(resp => resp.json())
@@ -31,17 +38,21 @@ function getMonsters(){
 
 }
 
+// this renders all monsters
 function renderMonsters(monsters){
   let p = ""
   monsters.forEach(monster => {
     p += `<p>${monster.name} age: ${monster.age}</p><p>${monster.description}</p>`  
   });
   monsterContainer.innerHTML = p
+
+  // disable the forward button when in last page
   if (monsters.length < 50){
     forward.disabled = true
   } else {
     forward.disabled = false
   }
+  // disable the back button when in first page
   if (page === 1) {
     back.disabled = true
   } else {
@@ -49,6 +60,7 @@ function renderMonsters(monsters){
   }
 }
 
+// create new monster
 function createNewMonster(event){
   event.preventDefault();
 
